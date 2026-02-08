@@ -5,6 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TubeManager AI - Your AI-Powered YouTube Growth System</title>
 
+    <!-- Meta Pixel Code -->
+    <script>
+        !function(f,b,e,v,n,t,s)
+        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)}(window, document,'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '1192810556351965');
+        fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+        src="https://www.facebook.com/tr?id=1192810556351965&ev=PageView&noscript=1"/></noscript>
+    <!-- End Meta Pixel Code -->
+
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-9D6GZ140T2"></script>
     <script>
@@ -1732,42 +1749,84 @@
 
         // GA4 Event Tracking
         function trackAndOpenModal(location) {
+            // GA4
             gtag('event', 'get_started_click', {
                 'button_location': location,
                 'page_location': window.location.href
             });
+
+            // Meta Pixel - AddToCart (Get Started click)
+            fbq('track', 'AddToCart', {
+                content_name: 'TubeManager AI',
+                content_type: 'product',
+                content_ids: ['tubemanager-bundle'],
+                content_category: 'YouTube AI Tools',
+                currency: 'USD'
+            });
+
             console.log('📊 GA Event: get_started_click from', location);
+            console.log('📘 Meta Pixel: AddToCart');
             openModal('bundle');
         }
 
         function trackGetBundle() {
+            // GA4
             gtag('event', 'get_bundle_click', {
                 'button_location': 'pricing_section',
                 'plan': 'Full Bundle',
                 'price': '$35'
             });
+
+            // Meta Pixel - AddToCart (Get Bundle click)
+            fbq('track', 'AddToCart', {
+                content_name: 'TubeManager AI - Full Bundle',
+                content_type: 'product',
+                content_ids: ['tubemanager-bundle'],
+                content_category: 'YouTube AI Tools',
+                value: 35.00,
+                currency: 'USD'
+            });
+
             console.log('📊 GA Event: get_bundle_click');
+            console.log('📘 Meta Pixel: AddToCart - Bundle $35');
             openModal('bundle');
         }
 
         function trackPurchaseIntent(plan, price) {
-            var numericValue = parseFloat(price.replace('$', ''));
+            // GA4
             gtag('event', 'purchase_intent', {
                 'plan_name': plan,
                 'plan_price': price,
                 'currency': 'USD'
             });
+
+            // Meta Pixel - InitiateCheckout (Buy Now click)
+            const priceValue = parseFloat(price.replace('$', ''));
+            fbq('track', 'InitiateCheckout', {
+                content_name: 'TubeManager AI - ' + plan,
+                content_type: 'product',
+                content_ids: ['tubemanager-' + plan.toLowerCase().replace(' ', '-')],
+                content_category: 'YouTube AI Tools',
+                value: priceValue,
+                currency: 'USD',
+                num_items: 1
+            });
+
+            // GA4 - Purchase Event (Added from index.html)
             gtag('event', 'purchase', {
                 'currency': 'USD',
-                'value': numericValue,
+                'value': priceValue,
                 'transaction_id': 'LP_' + Date.now(),
                 'items': [{
                     'item_name': plan,
-                    'price': numericValue,
+                    'price': priceValue,
                     'quantity': 1
                 }]
             });
-            console.log('📊 GA Events: purchase_intent + purchase -', plan, price, 'value:', numericValue);
+
+            console.log('📊 GA Event: purchase_intent -', plan, price);
+            console.log('📊 GA Event: purchase -', plan, priceValue);
+            console.log('📘 Meta Pixel: InitiateCheckout -', plan, '$' + priceValue);
         }
 
         function openModal(preselectedPlan = 'bundle') {
