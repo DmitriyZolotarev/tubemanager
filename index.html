@@ -1751,12 +1751,23 @@
         }
 
         function trackPurchaseIntent(plan, price) {
+            var numericValue = parseFloat(price.replace('$', ''));
             gtag('event', 'purchase_intent', {
                 'plan_name': plan,
                 'plan_price': price,
                 'currency': 'USD'
             });
-            console.log('📊 GA Event: purchase_intent -', plan, price);
+            gtag('event', 'purchase', {
+                'currency': 'USD',
+                'value': numericValue,
+                'transaction_id': 'LP_' + Date.now(),
+                'items': [{
+                    'item_name': plan,
+                    'price': numericValue,
+                    'quantity': 1
+                }]
+            });
+            console.log('📊 GA Events: purchase_intent + purchase -', plan, price, 'value:', numericValue);
         }
 
         function openModal(preselectedPlan = 'bundle') {
